@@ -12,7 +12,7 @@
        daryl_van_dyke@fws.gov
        
 '''
-import urllib2,os
+import urllib2,os, wget, urllib
 
 #  CHANGE ME for output somewhere other than where the script is called
 
@@ -38,14 +38,25 @@ def StringExtractor(inputString,wrapperString = '''"'''):
 
 
 ###################################################################################
+def L8_AWS_Downloadah(inputURLString_to_index):
+    path = os.path.split(inputURLString_to_index)[0]
+    print path
+    l8Site = urllib2.Request(inputURLString_to_index)
+    response = urllib2.urlopen(l8Site)
+    thisPage = response.read()
+    #print thisPage
+    list1 = thisPage.split('\n')
+    list2 = []
+    for items in list1:
+        if "<a href=" in items:
+            #print items
+            string2 = StringExtractor(items)
+            #print string2
+            list2.append(path+"/"+string2)
+    for items in list2:
+        print "--->",items
+        filename = wget.download(items)
+        #urllib.urlretrieve(items, items)
+    del l8Site,response,thisPage,list1,list2,filename
 
-l8Site = urllib2.Request(urlTest)
-response = urllib2.urlopen(l8Site)
-thisPage = response.read()
-#print thisPage
-list1 = thisPage.split('\n')
-
-list2 = []
-for items in list1:
-    if "<a href=" in items:
-        print items
+L8_AWS_Downloadah(listURL[0])
